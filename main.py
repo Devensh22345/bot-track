@@ -202,15 +202,24 @@ async def report_handler(client, message):
 
 
 # ------------------ Startup ------------------ #
+# ------------------ Startup ------------------ #
 async def main_async():
+    # Start all clone bots
     await restart_all_clones()
-    print("🚀 Main bot running with all clones active")
-    await main.start()
-    print("✅ Main bot is now listening for commands...")
+    print("🚀 All clone bots started")
 
-    # Keep alive
-    while True:
-        await asyncio.sleep(3600)
+    # Start main bot
+    await main.start()
+    print("✅ Main bot started and listening for commands")
+
+    # Keep main bot running forever
+    try:
+        await asyncio.Event().wait()  # This keeps the bot alive
+    finally:
+        await main.stop()
+        for bot_id in list(running_clones.keys()):
+            await stop_clone(bot_id)
+
 
 
 if __name__ == "__main__":

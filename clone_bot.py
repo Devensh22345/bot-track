@@ -35,10 +35,8 @@ async def start_handler(client, message):
     today = datetime.utcnow().strftime("%Y-%m-%d")
     month = datetime.utcnow().strftime("%Y-%m")
 
-    # Check if user already started to avoid multiple counting
     existing_user = users_col.find_one({"user_id": user.id, "bot_id": BOT_ID})
     if not existing_user:
-        # Update stats only if first start today
         field = "premium_count" if is_premium else "nonpremium_count"
         stats_col.update_one(
             {"bot_id": BOT_ID, "date": today},
@@ -46,7 +44,6 @@ async def start_handler(client, message):
             upsert=True
         )
 
-    # Save/update user info
     users_col.update_one(
         {"user_id": user.id, "bot_id": BOT_ID},
         {"$set": {
@@ -58,7 +55,6 @@ async def start_handler(client, message):
         upsert=True
     )
 
-    # Notify owner
     status = "🌟 Premium" if is_premium else "👤 Free"
     try:
         await client.send_message(
@@ -68,7 +64,6 @@ async def start_handler(client, message):
     except Exception as e:
         logging.info(f"Could not send owner message: {e}")
 
-    # Send custom start message if set
     bot_data = clones_col.find_one({"bot_id": BOT_ID})
     start_msg = bot_data.get("start_message") if bot_data else None
     if start_msg:
@@ -80,14 +75,12 @@ async def start_handler(client, message):
 # -------------------- SETSTART HANDLER --------------------
 @bot.on_message(filters.command("setstart") & filters.user(OWNER_ID))
 async def setstart_handler(client, message):
-    """Ask owner to send start message"""
     waiting_start_msg[OWNER_ID] = BOT_ID
     await message.reply_text("✍️ Please send me the message you want to set as the START message for this bot.")
 
 
 @bot.on_message(filters.private & filters.user(OWNER_ID))
 async def handle_text(client, message):
-    """If owner is sending start message"""
     if OWNER_ID in waiting_start_msg:
         start_text = message.text
         clones_col.update_one(
@@ -106,7 +99,6 @@ async def report_handler(client, message):
         today = datetime.utcnow().strftime("%Y-%m-%d")
         month = datetime.utcnow().strftime("%Y-%m")
 
-        # Daily report
         daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
         daily_report = (
             f"📊 Daily Report ({today})\n"
@@ -114,7 +106,6 @@ async def report_handler(client, message):
             f"👤 Free: {daily.get('nonpremium_count', 0)}"
         )
 
-        # Monthly report with date breakdown
         monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))
         if not monthly_stats:
             monthly_report = f"📅 Monthly Report ({month})\n❌ No stats found yet."
@@ -122,7 +113,6 @@ async def report_handler(client, message):
             monthly_lines = [f"📅 Monthly Report ({month})\n"]
             total_premium = 0
             total_free = 0
-
             for record in sorted(monthly_stats, key=lambda x: x["date"]):
                 date = record["date"]
                 premium = record.get("premium_count", 0)
@@ -130,22 +120,19 @@ async def report_handler(client, message):
                 monthly_lines.append(f"🗓 {date} → 🌟 {premium} | 👤 {free}")
                 total_premium += premium
                 total_free += free
-
             monthly_lines.append("\n📊 TOTAL:")
             monthly_lines.append(f"🌟 Premium: {total_premium}")
             monthly_lines.append(f"👤 Free: {total_free}")
             monthly_report = "\n".join(monthly_lines)
 
-        # Final report
         report_text = daily_report + "\n\n" + monthly_report
 
-        # Agar text lamba hai toh chunks me bhej do
+        # Split large messages into chunks
         for i in range(0, len(report_text), 4000):
             await message.reply_text(report_text[i:i+4000])
 
     except Exception as e:
         await message.reply_text(f"⚠️ Error generating report: `{e}`")
-
 
 
 if __name__ == '__main__':

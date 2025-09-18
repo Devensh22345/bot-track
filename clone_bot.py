@@ -69,7 +69,12 @@ async def report_handler(client, message):
 
     # Today’s report
     daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
-    daily_report = f"📊 Daily Report ({today})\n" \                           f"🌟 Premium: {daily.get('premium_count', 0)}\n" \                           f"👤 Free: {daily.get('nonpremium_count', 0)}"
+    daily_report = (
+        f"📊 Daily Report ({today})\n"
+        f"🌟 Premium: {daily.get('premium_count', 0)}\n"
+        f"👤 Free: {daily.get('nonpremium_count', 0)}"
+     )
+                      
 
     # Monthly report with date breakdown
     monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))

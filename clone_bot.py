@@ -102,37 +102,50 @@ async def handle_text(client, message):
 # -------------------- REPORT HANDLER --------------------
 @bot.on_message(filters.command("report") & filters.user(OWNER_ID))
 async def report_handler(client, message):
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    month = datetime.utcnow().strftime("%Y-%m")
+    try:
+        today = datetime.utcnow().strftime("%Y-%m-%d")
+        month = datetime.utcnow().strftime("%Y-%m")
 
-    # Daily report
-    daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
-    daily_report = (
-        f"📊 Daily Report ({today})\n"
-        f"🌟 Premium: {daily.get('premium_count', 0)}\n"
-        f"👤 Free: {daily.get('nonpremium_count', 0)}"
-    )
+        # Daily report
+        daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
+        daily_report = (
+            f"📊 Daily Report ({today})\n"
+            f"🌟 Premium: {daily.get('premium_count', 0)}\n"
+            f"👤 Free: {daily.get('nonpremium_count', 0)}"
+        )
 
-    # Monthly report with date breakdown
-    monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))
-    monthly_lines = [f"📅 Monthly Report ({month})\n"]
-    total_premium = 0
-    total_free = 0
+        # Monthly report with date breakdown
+        monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))
+        if not monthly_stats:
+            monthly_report = f"📅 Monthly Report ({month})\n❌ No stats found yet."
+        else:
+            monthly_lines = [f"📅 Monthly Report ({month})\n"]
+            total_premium = 0
+            total_free = 0
 
-    for record in sorted(monthly_stats, key=lambda x: x["date"]):
-        date = record["date"]
-        premium = record.get("premium_count", 0)
-        free = record.get("nonpremium_count", 0)
-        monthly_lines.append(f"🗓 {date} → 🌟 {premium} | 👤 {free}")
-        total_premium += premium
-        total_free += free
+            for record in sorted(monthly_stats, key=lambda x: x["date"]):
+                date = record["date"]
+                premium = record.get("premium_count", 0)
+                free = record.get("nonpremium_count", 0)
+                monthly_lines.append(f"🗓 {date} → 🌟 {premium} | 👤 {free}")
+                total_premium += premium
+                total_free += free
 
-    monthly_lines.append("\n📊 TOTAL:")
-    monthly_lines.append(f"🌟 Premium: {total_premium}")
-    monthly_lines.append(f"👤 Free: {total_free}")
-    monthly_report = "\n".join(monthly_lines)
+            monthly_lines.append("\n📊 TOTAL:")
+            monthly_lines.append(f"🌟 Premium: {total_premium}")
+            monthly_lines.append(f"👤 Free: {total_free}")
+            monthly_report = "\n".join(monthly_lines)
 
-    await message.reply_text(daily_report + "\n\n" + monthly_report)
+        # Final report
+        report_text = daily_report + "\n\n" + monthly_report
+
+        # Agar text lamba hai toh chunks me bhej do
+        for i in range(0, len(report_text), 4000):
+            await message.reply_text(report_text[i:i+4000])
+
+    except Exception as e:
+        await message.reply_text(f"⚠️ Error generating report: `{e}`")
+
 
 
 if __name__ == '__main__':

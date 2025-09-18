@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pymongo import MongoClient
-import subprocess, shlex
+import subprocess
 from config import API_ID, API_HASH, MAIN_BOT_TOKEN, MONGO_URI
 
 # Init main bot
@@ -8,6 +9,7 @@ main = Client("main_bot", api_id=API_ID, api_hash=API_HASH, bot_token=MAIN_BOT_T
 mongo = MongoClient(MONGO_URI)
 db = mongo["multi_clone_bot"]
 clones_col = db["clones"]
+
 
 @main.on_message(filters.command("clone") & filters.private)
 async def clone_handler(client, message):
@@ -42,8 +44,43 @@ async def clone_handler(client, message):
         await message.reply_text(f"⚠️ Failed to start clone process: {e}")
 
 
+@main.on_message(filters.command("mybots") & filters.private)
+async def mybots_handler(client, message):
+    """Show all user’s cloned bots with unlink buttons"""
+    owner_id = message.from_user.id
+    bots = list(clones_col.find({"owner_id": owner_id}))
+
+    if not bots:
+        return await message.reply_text("ℹ️ You don’t have any linked bots.")
+
+    keyboard = []
+    for b in bots:
+        bot_id = b["bot_id"]
+        keyboard.append([InlineKeyboardButton(f"❌ Unlink {bot_id}", callback_data=f"unlink:{bot_id}")])
+
+    await message.reply_text(
+        "🤖 Your Cloned Bots:",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+
+@main.on_callback_query(filters.regex(r"^unlink:(.+)"))
+async def unlink_callback(client, callback_query: CallbackQuery):
+    """Handle unlink button clicks"""
+    owner_id = callback_query.from_user.id
+    bot_id = callback_query.data.split(":")[1]
+
+    result = clones_col.delete_one({"owner_id": owner_id, "bot_id": bot_id})
+
+    if result.deleted_count > 0:
+        await callback_query.message.edit_text(f"❌ Bot `{bot_id}` unlinked successfully.")
+    else:
+        await callback_query.answer("⚠️ No such bot found.", show_alert=True)
+
+
 @main.on_message(filters.command("unlink_all") & filters.private)
 async def unlink_all_handler(client, message):
+    """Unlink all bots at once"""
     owner_id = message.from_user.id
     result = clones_col.delete_many({"owner_id": owner_id})
 
@@ -51,23 +88,6 @@ async def unlink_all_handler(client, message):
         await message.reply_text(f"❌ All your {result.deleted_count} cloned bots have been unlinked.")
     else:
         await message.reply_text("ℹ️ You don’t have any linked bots.")
-
-
-@main.on_message(filters.command("unlink") & filters.private)
-async def unlink_one_handler(client, message):
-    owner_id = message.from_user.id
-    args = message.text.split()
-
-    if len(args) != 2:
-        return await message.reply_text("Usage: /unlink <bot_id>")
-
-    bot_id = args[1].strip()
-    result = clones_col.delete_one({"owner_id": owner_id, "bot_id": bot_id})
-
-    if result.deleted_count > 0:
-        await message.reply_text(f"❌ Your bot `{bot_id}` has been unlinked successfully.")
-    else:
-        await message.reply_text("⚠️ No linked bot found with that ID.")
 
 
 if __name__ == '__main__':

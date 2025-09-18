@@ -22,13 +22,12 @@ colorama.init(autoreset=True)
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler("massreporter.log", encoding="utf-8"),
         logging.StreamHandler(sys.stdout)
     ]
 )
-
 logger = logging.getLogger("MassReporter")
 
 # Create a beautiful animated banner
@@ -779,33 +778,6 @@ async def join_channel(client, channel, retry_count=3):
                 return False
     
     return False
-
-async def handle_report_api_compatibility(client, entity, message_ids, reason_obj, extra_details=""):
-    """
-    Unified reporting handler for both messages and peers.
-    Ensures correct API call depending on whether message_ids are provided.
-    """
-    try:
-        if message_ids and len(message_ids) > 0:
-            # Report specific messages inside a channel/group
-            result = await client(functions.messages.Report(
-                peer=entity,
-                id=message_ids,
-                reason=reason_obj,
-                message=extra_details or "Reported via EnhancedMassReporter"
-            ))
-        else:
-            # Report the channel or user itself
-            result = await client(functions.account.ReportPeer(
-                peer=entity,
-                reason=reason_obj,
-                message=extra_details or "Reported via EnhancedMassReporter"
-            ))
-        return result
-    except Exception as e:
-        logger.error(f"❌ Report API call failed: {e}")
-        return False
-
 
 async def report_channel(client, channel, reason_obj, message_ids=None, extra_details=""):
     """Submit a report with enhanced error handling and retry logic"""
@@ -2227,48 +2199,31 @@ class AdvancedReportingEngine:
 
 # Add this function after the existing functions
 
-async def handle_report_api_compatibility(client, peer, message_ids, reason_obj, extra_details):
-    """Handle different versions of Telethon API for report requests"""
+async def handle_report_api_compatibility(client, peer, message_ids, reason_obj, extra_details=""):
+    """
+    Unified reporting handler for both messages and peers.
+    Ensures correct API call depending on whether message_ids are provided.
+    """
     try:
-        # Try the newest API format first (with reason parameter)
-        return await client(functions.messages.ReportRequest(
-            peer=peer,
-            id=message_ids,
-            reason=reason_obj,
-            message=extra_details or "This channel violates Telegram's Terms of Service."
-        ))
-    except TypeError as e:
-        if "unexpected keyword argument 'reason'" in str(e):
-            # Fallback to older API format (without reason parameter)
-            logger.info("Using fallback API format (without reason parameter)")
-            return await client(functions.messages.ReportRequest(
+        if message_ids and len(message_ids) > 0:
+            result = await client(functions.messages.Report(
                 peer=peer,
                 id=message_ids,
-                message=extra_details or "This channel violates Telegram's Terms of Service."
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
             ))
         else:
-            # Re-raise if it's a different TypeError
-            raise e
-    except Exception as e:
-        # Handle other potential API issues
-        logger.warning(f"API compatibility issue: {str(e)}")
-        try:
-            # Try minimal parameters
-            return await client(functions.messages.ReportRequest(
+            result = await client(functions.account.ReportPeer(
                 peer=peer,
-                id=message_ids
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
             ))
-        except Exception as e2:
-            logger.error(f"All API formats failed: {str(e2)}")
-            raise e2
+        return result
+    except Exception as e:
+        logger.error(f"❌ Report API call failed: {e}")
+        return False
 
-# Add this after the imports, before the colorama.init() line
-
-# Password protection system
-class PasswordProtection:
-    """Password protection system for script access"""
-    
-    def __init__(self):
+def __init__(self):
         # Default password - CHANGE THIS TO YOUR OWN PASSWORD
         self.admin_password = "ADMIN_2024_SECURE"  # Change this!
         self.max_attempts = 3
@@ -2447,5 +2402,4 @@ if __name__ == "__main__":
         print(f"\n{Fore.RED}Unhandled error: {e}")
         # Show partial stats if available
         if stats.report_attempts > 0:
-
             stats.print_stats()

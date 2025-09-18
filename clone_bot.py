@@ -31,7 +31,7 @@ async def start_handler(client, message):
         upsert=True
     )
 
-    await message.reply_text("👋 Welcome! You have been logged.")
+    
 
 
 @clone.on_message(filters.command("users") & filters.private)

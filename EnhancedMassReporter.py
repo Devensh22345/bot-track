@@ -2223,7 +2223,7 @@ async def handle_report_api_compatibility(client, peer, message_ids, reason_obj,
         logger.error(f"❌ Report API call failed: {e}")
         return False
 
-def __init__(self):
+    def __init__(self):
         # Default password - CHANGE THIS TO YOUR OWN PASSWORD
         self.admin_password = "ADMIN_2024_SECURE"  # Change this!
         self.max_attempts = 3

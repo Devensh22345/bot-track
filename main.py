@@ -13,6 +13,25 @@ mongo = MongoClient(MONGO_URI)
 db = mongo["multi_clone_bot"]
 clones_col = db["clones"]
 
+@main.on_message(filters.command("start") & filters.private)
+async def start_cmd(client, message):
+    text = (
+        "👋 **Welcome to Multi Clone Bot System**\n\n"
+        "📌 Yeh bot tumhe multiple bots manage karne deta hai.\n\n"
+        "✨ **Main Bot Commands**\n"
+        "/clone `<BOT_TOKEN>` – Naya bot clone karne ke liye.\n"
+        "/mybots – Tumhare sare cloned bots ki list dekho.\n"
+        "/unlink_all – Tumhare sare bots ek saath unlink karo.\n\n"
+        "➡️ **Clone Bot Commands** (har cloned bot ke liye)\n"
+        "/start – Bot start karne wale users ko track karta hai.\n"
+        "/setstart – Custom start message set karne ke liye (owner only).\n"
+        "/users – Daily stats dekhne ke liye (last 30 days).\n\n"
+        "⚠️ Note: Har cloned bot sirf uske **owner** ke liye accessible hai."
+    )
+    await message.reply_text(text)
+
+
+
 
 @main.on_message(filters.command("clone") & filters.private)
 async def clone_handler(client, message):

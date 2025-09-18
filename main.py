@@ -99,4 +99,31 @@ async def unlink_callback(client, callback_query: CallbackQuery):
     bot_name = bot_data.get("bot_name", "Unknown")
     clones_col.delete_one({"owner_id": owner_id, "bot_id": bot_id})
 
-    await callback_query.message.edit_text(f"❌ Bot
+    await callback_query.message.edit_text(f"❌ Bot {bot_name} (`{bot_id}`) unlinked and stopped successfully.")
+
+
+@main.on_message(filters.command("unlink_all") & filters.private)
+async def unlink_all_handler(client, message):
+    owner_id = message.from_user.id
+    bots = list(clones_col.find({"owner_id": owner_id}))
+
+    if not bots:
+        return await message.reply_text("ℹ️ You don’t have any linked bots.")
+
+    count = 0
+    for b in bots:
+        pid = b.get("pid")
+        if pid:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        clones_col.delete_one({"_id": b["_id"]})
+        count += 1
+
+    await message.reply_text(f"❌ All your {count} cloned bots have been unlinked and stopped.")
+
+
+if __name__ == '__main__':
+    print("🚀 Main Bot Running...")
+    main.run()

@@ -2,16 +2,17 @@ import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pymongo import MongoClient
-from config import API_ID, API_HASH, MAIN_BOT_TOKEN, MONGO_URI
 from datetime import datetime
+from config import API_ID, API_HASH, MAIN_BOT_TOKEN, MONGO_URI
+import pyrogram.errors
 
-# --- Initialize ---
+# --- Initialize main bot ---
 main = Client("main_bot", api_id=API_ID, api_hash=API_HASH, bot_token=MAIN_BOT_TOKEN)
 mongo = MongoClient(MONGO_URI)
 db = mongo["multi_clone_bot"]
 clones_col = db["clones"]
 
-# --- Dictionary to hold running clone clients ---
+# --- Running clone clients dictionary ---
 running_clones = {}
 
 # --- Clone functions ---
@@ -26,9 +27,14 @@ async def start_clone(bot_token, owner_id, bot_name="Unknown"):
     async def start_handler(client, message):
         await message.reply_text(f"✅ You started the bot `{bot_name}`!")
 
-    await clone_client.start()
-    running_clones[bot_id] = clone_client
-    print(f"🚀 Clone bot {bot_name} ({bot_id}) started for owner {owner_id}")
+    try:
+        await clone_client.start()
+        running_clones[bot_id] = clone_client
+        print(f"🚀 Clone bot {bot_name} ({bot_id}) started for owner {owner_id}")
+    except pyrogram.errors.FloodWait as e:
+        print(f"⚠️ FloodWait {e.x}s for bot {bot_name}. Sleeping...")
+        await asyncio.sleep(e.x)
+        await start_clone(bot_token, owner_id, bot_name)
 
 async def stop_clone(bot_id):
     client = running_clones.get(bot_id)
@@ -40,7 +46,16 @@ async def stop_clone(bot_id):
 async def restart_all_clones():
     all_clones = list(clones_col.find({}))
     for c in all_clones:
-        await start_clone(c["bot_token"], c["owner_id"], c.get("bot_name", "Unknown"))
+        bot_token = c["bot_token"]
+        owner_id = c["owner_id"]
+        bot_name = c.get("bot_name", "Unknown")
+        try:
+            await start_clone(bot_token, owner_id, bot_name)
+            await asyncio.sleep(2)  # small delay to avoid flood
+        except pyrogram.errors.FloodWait as e:
+            print(f"FloodWait {e.x}s for bot {bot_name}. Sleeping...")
+            await asyncio.sleep(e.x)
+            await start_clone(bot_token, owner_id, bot_name)
 
 # --- Main bot handlers ---
 @main.on_message(filters.command("clone") & filters.private)
@@ -118,12 +133,11 @@ async def unlink_all_handler(client, message):
     await message.reply_text(f"❌ All your cloned bots have been unlinked and stopped.")
 
 # --- Startup ---
-async def startup():
+async def main_async():
     await restart_all_clones()
     print("🚀 Main bot running with all clones active")
+    await main.start()
+    await main.idle()  # keeps bot running
 
 if __name__ == "__main__":
-    import asyncio
-    loop = asyncio.get_event_loop()
-    loop.create_task(startup())
-    main.run()  # ✅ no argument here
+    asyncio.run(main_async())

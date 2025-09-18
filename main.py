@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from datetime import datetime, timezone
+from pyrogram import idle
 
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
@@ -203,6 +204,7 @@ async def report_handler(client, message):
 
 # ------------------ Startup ------------------ #
 # ------------------ Startup ------------------ #
+
 async def main_async():
     # Start all clone bots
     await restart_all_clones()
@@ -212,13 +214,14 @@ async def main_async():
     await main.start()
     print("✅ Main bot started and listening for commands")
 
-    # Keep main bot running forever
-    try:
-        await asyncio.Event().wait()  # This keeps the bot alive
-    finally:
-        await main.stop()
-        for bot_id in list(running_clones.keys()):
-            await stop_clone(bot_id)
+    # Keep main bot running and processing updates
+    await idle()
+
+    # Cleanup on shutdown
+    await main.stop()
+    for bot_id in list(running_clones.keys()):
+        await stop_clone(bot_id)
+
 
 
 

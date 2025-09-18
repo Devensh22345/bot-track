@@ -1,0 +1,34 @@
+{
+  "name": "telegram-clone-bot",
+  "description": "Main bot that allows users to clone their own bots (starts clone process).",
+  "repository": "https://github.com/yourusername/telegram-clone-bot",
+  "env": {
+    "API_ID": {
+      "description": "Telegram API ID",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "Telegram API HASH",
+      "required": true
+    },
+    "MAIN_BOT_TOKEN": {
+      "description": "Main Bot Token",
+      "required": true
+    },
+    "MONGO_URI": {
+      "description": "MongoDB connection string",
+      "required": true
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

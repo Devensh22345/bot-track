@@ -14,14 +14,11 @@ clones_col = db["clones"]
 # --- Dictionary to hold running clone clients ---
 running_clones = {}
 
-
+# --- Clone functions ---
 async def start_clone(bot_token, owner_id, bot_name="Unknown"):
-    """
-    Start a clone bot client as asyncio task
-    """
     bot_id = bot_token.split(":")[0]
     if bot_id in running_clones:
-        return  # already running
+        return
 
     clone_client = Client(f"clone_{bot_id}", api_id=API_ID, api_hash=API_HASH, bot_token=bot_token)
 
@@ -29,34 +26,23 @@ async def start_clone(bot_token, owner_id, bot_name="Unknown"):
     async def start_handler(client, message):
         await message.reply_text(f"✅ You started the bot `{bot_name}`!")
 
-    # Start client
     await clone_client.start()
     running_clones[bot_id] = clone_client
     print(f"🚀 Clone bot {bot_name} ({bot_id}) started for owner {owner_id}")
 
-
 async def stop_clone(bot_id):
-    """
-    Stop a running clone bot
-    """
     client = running_clones.get(bot_id)
     if client:
         await client.stop()
         running_clones.pop(bot_id, None)
         print(f"❌ Clone bot {bot_id} stopped")
 
-
 async def restart_all_clones():
-    """
-    On startup, restart all clones from DB
-    """
     all_clones = list(clones_col.find({}))
     for c in all_clones:
         await start_clone(c["bot_token"], c["owner_id"], c.get("bot_name", "Unknown"))
 
-
 # --- Main bot handlers ---
-
 @main.on_message(filters.command("clone") & filters.private)
 async def clone_handler(client, message):
     if len(message.command) < 2:
@@ -68,7 +54,7 @@ async def clone_handler(client, message):
 
     bot_id = bot_token.split(":")[0]
     owner_id = message.from_user.id
-    bot_name = "Unknown"  # Initially unknown
+    bot_name = "Unknown"
 
     # Save to DB
     clones_col.update_one(
@@ -84,7 +70,6 @@ async def clone_handler(client, message):
 
     await start_clone(bot_token, owner_id, bot_name)
     await message.reply_text(f"✅ Bot cloned!\n\n🤖 Bot: {bot_name} (`{bot_id}`)\n👤 Owner: `{owner_id}`")
-
 
 @main.on_message(filters.command("mybots") & filters.private)
 async def mybots_handler(client, message):
@@ -105,7 +90,6 @@ async def mybots_handler(client, message):
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
-
 @main.on_callback_query(filters.regex(r"^unlink:(.+)"))
 async def unlink_callback(client, callback_query: CallbackQuery):
     owner_id = callback_query.from_user.id
@@ -118,7 +102,6 @@ async def unlink_callback(client, callback_query: CallbackQuery):
     await stop_clone(bot_id)
     clones_col.delete_one({"owner_id": owner_id, "bot_id": bot_id})
     await callback_query.message.edit_text(f"❌ Bot {bot_data.get('bot_name','Unknown')} ({bot_id}) unlinked and stopped successfully.")
-
 
 @main.on_message(filters.command("unlink_all") & filters.private)
 async def unlink_all_handler(client, message):
@@ -134,12 +117,13 @@ async def unlink_all_handler(client, message):
 
     await message.reply_text(f"❌ All your cloned bots have been unlinked and stopped.")
 
-
 # --- Startup ---
-async def main_loop():
+async def startup():
     await restart_all_clones()
     print("🚀 Main bot running with all clones active")
 
-
 if __name__ == "__main__":
-    main.run(main_loop())
+    import asyncio
+    loop = asyncio.get_event_loop()
+    loop.create_task(startup())
+    main.run()  # ✅ no argument here

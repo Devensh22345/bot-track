@@ -133,11 +133,19 @@ async def unlink_all_handler(client, message):
     await message.reply_text(f"❌ All your cloned bots have been unlinked and stopped.")
 
 # --- Startup ---
+# --- Startup ---
 async def main_async():
     await restart_all_clones()
     print("🚀 Main bot running with all clones active")
+    
+    # Start main bot (keeps running)
     await main.start()
-    await main.idle()  # keeps bot running
+    
+    # Heroku me loop ko rokna nahi chahiye, isliye infinite sleep
+    print("✅ Main bot is now listening for commands...")
+    while True:
+        await asyncio.sleep(3600)  # 1 hour sleep, loop keeps bot alive
+
 
 if __name__ == "__main__":
     asyncio.run(main_async())

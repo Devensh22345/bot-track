@@ -24,10 +24,11 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("massreporter.log"),
-        logging.StreamHandler()
+        logging.FileHandler("massreporter.log", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout)
     ]
 )
+
 logger = logging.getLogger("MassReporter")
 
 # Create a beautiful animated banner
@@ -778,6 +779,33 @@ async def join_channel(client, channel, retry_count=3):
                 return False
     
     return False
+
+async def handle_report_api_compatibility(client, entity, message_ids, reason_obj, extra_details=""):
+    """
+    Unified reporting handler for both messages and peers.
+    Ensures correct API call depending on whether message_ids are provided.
+    """
+    try:
+        if message_ids and len(message_ids) > 0:
+            # Report specific messages inside a channel/group
+            result = await client(functions.messages.Report(
+                peer=entity,
+                id=message_ids,
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
+            ))
+        else:
+            # Report the channel or user itself
+            result = await client(functions.account.ReportPeer(
+                peer=entity,
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
+            ))
+        return result
+    except Exception as e:
+        logger.error(f"❌ Report API call failed: {e}")
+        return False
+
 
 async def report_channel(client, channel, reason_obj, message_ids=None, extra_details=""):
     """Submit a report with enhanced error handling and retry logic"""
@@ -2419,4 +2447,5 @@ if __name__ == "__main__":
         print(f"\n{Fore.RED}Unhandled error: {e}")
         # Show partial stats if available
         if stats.report_attempts > 0:
+
             stats.print_stats()

@@ -5,6 +5,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pymongo import MongoClient
 from config import API_ID, API_HASH, MAIN_BOT_TOKEN, MONGO_URI
+from datetime import datetime
 
 # Init main bot
 main = Client("main_bot", api_id=API_ID, api_hash=API_HASH, bot_token=MAIN_BOT_TOKEN)
@@ -32,30 +33,20 @@ async def clone_handler(client, message):
     except Exception as e:
         return await message.reply_text(f"⚠️ Failed to start clone process: {e}")
 
-    # Fetch bot name from API
-    try:
-        temp_client = Client("temp", api_id=API_ID, api_hash=API_HASH, bot_token=bot_token)
-        await temp_client.start()
-        me = await temp_client.get_me()
-        bot_name = me.first_name or "Unknown"
-        await temp_client.stop()
-    except Exception:
-        bot_name = "Unknown"
-
-    # Save clone info + PID + Name
+    # Save clone info + PID + temporary bot_name
     clones_col.update_one(
         {"bot_id": bot_id},
         {"$set": {
             "bot_token": bot_token,
             "owner_id": owner_id,
-            "bot_name": bot_name,
-            "created_at": __import__('datetime').datetime.utcnow(),
+            "bot_name": "Unknown",  # Avoid async start in Heroku
+            "created_at": datetime.utcnow(),
             "pid": pid
         }},
         upsert=True
     )
 
-    await message.reply_text(f"✅ Bot cloned!\n\n🤖 Bot: {bot_name} (`{bot_id}`)\n👤 Owner: `{owner_id}`")
+    await message.reply_text(f"✅ Bot cloned!\n\n🤖 Bot: Unknown (`{bot_id}`)\n👤 Owner: `{owner_id}`")
 
 
 @main.on_message(filters.command("mybots") & filters.private)
@@ -122,3 +113,8 @@ async def unlink_all_handler(client, message):
         count += 1
 
     await message.reply_text(f"❌ All your {count} cloned bots have been unlinked and stopped.")
+
+
+if __name__ == '__main__':
+    print("🚀 Main Bot Running...")
+    main.run()

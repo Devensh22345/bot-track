@@ -2,10 +2,11 @@ import sys
 import logging
 from pyrogram import Client, filters
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timezone
 from config import API_ID, API_HASH, MONGO_URI
 
 logging.basicConfig(level=logging.INFO)
+
 # Args: BOT_TOKEN OWNER_ID
 if len(sys.argv) < 3:
     print("Usage: python3 clone_bot.py <BOT_TOKEN> <OWNER_ID>")
@@ -21,12 +22,13 @@ db = mongo["multi_clone_bot"]
 users_col = db["users"]
 stats_col = db["stats"]
 
+
 @bot.on_message(filters.command("start"))
 async def start_handler(client, message):
     user = message.from_user
     is_premium = bool(getattr(user, 'is_premium', False))
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    month = datetime.utcnow().strftime("%Y-%m")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    month = datetime.now(timezone.utc).strftime("%Y-%m")
 
     # Save user
     users_col.update_one(
@@ -40,13 +42,23 @@ async def start_handler(client, message):
         upsert=True
     )
 
-    # Update stats (per date)
-    stats_col.update_one(
-        {"bot_id": BOT_ID, "date": today},
-        {"$inc": {"premium_count" if is_premium else "nonpremium_count": 1},
-         "$set": {"month": month}},
-        upsert=True
-    )
+    # Avoid duplicate counting (unique per user per day)
+    already_counted = stats_col.find_one({
+        "bot_id": BOT_ID,
+        "date": today,
+        "users": {"$in": [user.id]}
+    })
+
+    if not already_counted:
+        stats_col.update_one(
+            {"bot_id": BOT_ID, "date": today},
+            {
+                "$inc": {"premium_count" if is_premium else "nonpremium_count": 1},
+                "$set": {"month": month},
+                "$push": {"users": user.id}
+            },
+            upsert=True
+        )
 
     # Notify owner
     status = "🌟 Premium" if is_premium else "👤 Free"
@@ -64,8 +76,8 @@ async def start_handler(client, message):
 
 @bot.on_message(filters.command("report") & filters.user(OWNER_ID))
 async def report_handler(client, message):
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    month = datetime.utcnow().strftime("%Y-%m")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    month = datetime.now(timezone.utc).strftime("%Y-%m")
 
     # Today’s report
     daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
@@ -73,8 +85,7 @@ async def report_handler(client, message):
         f"📊 Daily Report ({today})\n"
         f"🌟 Premium: {daily.get('premium_count', 0)}\n"
         f"👤 Free: {daily.get('nonpremium_count', 0)}"
-     )
-                      
+    )
 
     # Monthly report with date breakdown
     monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))

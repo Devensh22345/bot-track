@@ -1,140 +1,72 @@
 import sys
-import logging
-from pyrogram import Client, filters
+from datetime import datetime, timedelta
 from pymongo import MongoClient
-from datetime import datetime
-
-logging.basicConfig(level=logging.INFO)
-
-# Args: BOT_TOKEN OWNER_ID
-if len(sys.argv) < 3:
-    print("Usage: python3 clone_bot.py <BOT_TOKEN> <OWNER_ID>")
-    sys.exit(1)
-
-BOT_TOKEN = sys.argv[1]
-OWNER_ID = int(sys.argv[2])
-BOT_ID = BOT_TOKEN.split(":")[0]
-
+from pyrogram import Client, filters
 from config import API_ID, API_HASH, MONGO_URI
 
-bot = Client(f"clone_{BOT_ID}", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+bot_token = sys.argv[1]
+owner_id = int(sys.argv[2])
+
+clone = Client("clone_bot", api_id=API_ID, api_hash=API_HASH, bot_token=bot_token)
 mongo = MongoClient(MONGO_URI)
 db = mongo["multi_clone_bot"]
-users_col = db["users"]
-stats_col = db["stats"]
-clones_col = db["clones"]
+users_col = db["users"]  # stores start logs
 
-# In-memory tracker for /setstart process
-waiting_start_msg = {}
 
-# -------------------- START HANDLER --------------------
-@bot.on_message(filters.command("start"))
+@clone.on_message(filters.command("start"))
 async def start_handler(client, message):
     user = message.from_user
-    is_premium = bool(getattr(user, 'is_premium', False))
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    month = datetime.utcnow().strftime("%Y-%m")
+    is_premium = bool(user.is_premium)
 
-    existing_user = users_col.find_one({"user_id": user.id, "bot_id": BOT_ID})
-    if not existing_user:
-        field = "premium_count" if is_premium else "nonpremium_count"
-        stats_col.update_one(
-            {"bot_id": BOT_ID, "date": today},
-            {"$inc": {field: 1}, "$set": {"month": month}},
-            upsert=True
-        )
+    # save in DB
+    users_col.insert_one({
+        "bot_id": (await client.get_me()).id,
+        "user_id": user.id,
+        "is_premium": is_premium,
+        "date": datetime.utcnow().strftime("%Y-%m-%d"),
+        "timestamp": datetime.utcnow()
+    })
 
-    users_col.update_one(
-        {"user_id": user.id, "bot_id": BOT_ID},
-        {"$set": {
-            "name": user.first_name or '',
-            "is_premium": is_premium,
-            "start_date": today,
-            "bot_id": BOT_ID
-        }},
-        upsert=True
-    )
-
-    status = "🌟 Premium" if is_premium else "👤 Free"
-    try:
-        await client.send_message(
-            OWNER_ID,
-            f"{status} User Started Bot\n\n👤 Name: {user.first_name or ''}\n🆔 ID: {user.id}\n🤖 Bot: {BOT_ID}"
-        )
-    except Exception as e:
-        logging.info(f"Could not send owner message: {e}")
-
-    bot_data = clones_col.find_one({"bot_id": BOT_ID})
-    start_msg = bot_data.get("start_message") if bot_data else None
-    if start_msg:
-        await message.reply_text(start_msg)
-    else:
-        await message.reply_text("👋 Welcome! This bot has no custom start message yet.")
+    await message.reply_text("👋 Welcome! You have been logged.")
 
 
-# -------------------- SETSTART HANDLER --------------------
-@bot.on_message(filters.command("setstart") & filters.user(OWNER_ID))
-async def setstart_handler(client, message):
-    waiting_start_msg[OWNER_ID] = BOT_ID
-    await message.reply_text("✍️ Please send me the message you want to set as the START message for this bot.")
+@clone.on_message(filters.command("users") & filters.private)
+async def users_report(client, message):
+    if message.from_user.id != owner_id:
+        return await message.reply_text("⚠️ Only owner can use this command.")
 
+    today = datetime.utcnow().date()
+    start_date = today - timedelta(days=29)
 
-@bot.on_message(filters.private & filters.user(OWNER_ID))
-async def handle_text(client, message):
-    if OWNER_ID in waiting_start_msg:
-        start_text = message.text
-        clones_col.update_one(
-            {"bot_id": BOT_ID, "owner_id": OWNER_ID},
-            {"$set": {"start_message": start_text}},
-            upsert=True
-        )
-        waiting_start_msg.pop(OWNER_ID)
-        await message.reply_text("✅ Start message has been set successfully!")
+    bot_id = (await client.get_me()).id
+    pipeline = [
+        {"$match": {"bot_id": bot_id, "date": {"$gte": start_date.strftime("%Y-%m-%d")}}},
+        {"$group": {"_id": {"date": "$date", "is_premium": "$is_premium"}, "count": {"$sum": 1}}},
+        {"$sort": {"_id.date": 1}}
+    ]
+    stats = list(users_col.aggregate(pipeline))
 
-
-# -------------------- REPORT HANDLER --------------------
-@bot.on_message(filters.command("report") & filters.user(OWNER_ID))
-async def report_handler(client, message):
-    try:
-        today = datetime.utcnow().strftime("%Y-%m-%d")
-        month = datetime.utcnow().strftime("%Y-%m")
-
-        daily = stats_col.find_one({"bot_id": BOT_ID, "date": today}) or {}
-        daily_report = (
-            f"📊 Daily Report ({today})\n"
-            f"🌟 Premium: {daily.get('premium_count', 0)}\n"
-            f"👤 Free: {daily.get('nonpremium_count', 0)}"
-        )
-
-        monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))
-        if not monthly_stats:
-            monthly_report = f"📅 Monthly Report ({month})\n❌ No stats found yet."
+    # format output
+    report = "📊 User Report (Last 30 Days)\n\n"
+    data_map = {}
+    for s in stats:
+        d = s["_id"]["date"]
+        if d not in data_map:
+            data_map[d] = {"premium": 0, "normal": 0}
+        if s["_id"]["is_premium"]:
+            data_map[d]["premium"] += s["count"]
         else:
-            monthly_lines = [f"📅 Monthly Report ({month})\n"]
-            total_premium = 0
-            total_free = 0
-            for record in sorted(monthly_stats, key=lambda x: x["date"]):
-                date = record["date"]
-                premium = record.get("premium_count", 0)
-                free = record.get("nonpremium_count", 0)
-                monthly_lines.append(f"🗓 {date} → 🌟 {premium} | 👤 {free}")
-                total_premium += premium
-                total_free += free
-            monthly_lines.append("\n📊 TOTAL:")
-            monthly_lines.append(f"🌟 Premium: {total_premium}")
-            monthly_lines.append(f"👤 Free: {total_free}")
-            monthly_report = "\n".join(monthly_lines)
+            data_map[d]["normal"] += s["count"]
 
-        report_text = daily_report + "\n\n" + monthly_report
+    for i in range(30):
+        d = (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
+        prem = data_map.get(d, {}).get("premium", 0)
+        norm = data_map.get(d, {}).get("normal", 0)
+        report += f"{d} → ⭐ {prem} | 👤 {norm}\n"
 
-        # Split large messages into chunks
-        for i in range(0, len(report_text), 4000):
-            await message.reply_text(report_text[i:i+4000])
-
-    except Exception as e:
-        await message.reply_text(f"⚠️ Error generating report: `{e}`")
+    await message.reply_text(report)
 
 
-if __name__ == '__main__':
-    print(f"🚀 Clone Bot {BOT_ID} running for owner {OWNER_ID}")
-    bot.run()
+if __name__ == "__main__":
+    print(f"🚀 Clone Bot Running for {bot_token}")
+    clone.run()

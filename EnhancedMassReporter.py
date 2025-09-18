@@ -1170,8 +1170,6 @@ def create_beautiful_config_file():
     except Exception as e:
         print(f"{Fore.RED}❌ Failed to create configuration file: {e}")
 
-# Add this function before the main() function
-
 def display_ethical_guidelines():
     """Display ethical guidelines for responsible usage"""
     print(f"\n{Fore.RED}╔{'═' * 73}╗")
@@ -1210,6 +1208,578 @@ def display_ethical_guidelines():
     
     return True
 
+def analyze_report_effectiveness():
+    """Analyze and provide insights on report effectiveness"""
+    print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+    print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 REPORT EFFECTIVENESS ANALYSIS{' ' * 45}{Fore.CYAN}║")
+    print(f"{Fore.CYAN}╠{'═' * 73}╣")
+    
+    effectiveness_tips = [
+        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.GREEN}High Success Rate Factors:{' ' * 50}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Use 50+ different accounts for maximum impact{' ' * 35}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Report during peak hours (when mods are active){' ' * 30}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Use multiple report reasons (not just spam){' ' * 32}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Include detailed custom messages{' ' * 45}{Fore.CYAN}║",
+        f"{Fore.CYAN}║{' ' * 73}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.YELLOW}Channel Ban Probability:{' ' * 50}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - 10-50 reports: 30% chance of restriction{' ' * 35}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - 50-100 reports: 60% chance of restriction{' ' * 35}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - 100+ reports: 80%+ chance of action{' ' * 40}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Severe violations: Higher ban probability{' ' * 35}{Fore.CYAN}║",
+        f"{Fore.CYAN}║{' ' * 73}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.RED}Important Notes:{' ' * 55}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Reports are reviewed by humans, not automated{' ' * 30}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - False reports can get your accounts banned{' ' * 32}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Use only against genuinely harmful content{' ' * 35}{Fore.CYAN}║",
+        f"{Fore.CYAN}║ {Fore.WHITE}  - Multiple sessions may be needed for large channels{' ' * 25}{Fore.CYAN}║"
+    ]
+    
+    for tip in effectiveness_tips:
+        print(tip)
+    
+    print(f"{Fore.CYAN}╚{'═' * 73}╝")
+
+# Advanced reporting strategies
+class AdvancedReportingStrategy:
+    """Advanced strategies for maximum report effectiveness"""
+    
+    def __init__(self):
+        self.report_patterns = {
+            'aggressive': {
+                'reports_per_account': 5,
+                'delay_range': (2, 8),
+                'session_delay': (30, 120),
+                'retry_attempts': 3
+            },
+            'stealth': {
+                'reports_per_account': 2,
+                'delay_range': (10, 30),
+                'session_delay': (60, 300),
+                'retry_attempts': 2
+            },
+            'mass': {
+                'reports_per_account': 10,
+                'delay_range': (1, 5),
+                'session_delay': (10, 60),
+                'retry_attempts': 5
+            }
+        }
+        
+        # Peak hours for maximum moderator activity
+        self.peak_hours = [
+            (9, 12),   # Morning (UTC)
+            (14, 17),  # Afternoon (UTC)
+            (19, 22)   # Evening (UTC)
+        ]
+        
+        # Multiple report reasons for higher impact
+        self.reason_combinations = [
+            [types.InputReportReasonSpam(), types.InputReportReasonViolence()],
+            [types.InputReportReasonPornography(), types.InputReportReasonChildAbuse()],
+            [types.InputReportReasonFake(), types.InputReportReasonCopyright()],
+            [types.InputReportReasonIllegalDrugs(), types.InputReportReasonOther()],
+            [types.InputReportReasonPersonalDetails(), types.InputReportReasonSpam()]
+        ]
+    
+    def get_optimal_timing(self):
+        """Get optimal timing for maximum moderator response"""
+        current_hour = datetime.utcnow().hour
+        
+        for start, end in self.peak_hours:
+            if start <= current_hour <= end:
+                return True, f"Peak hours detected ({start}:00-{end}:00 UTC)"
+        
+        return False, "Off-peak hours - consider waiting for peak times"
+    
+    def get_reason_combination(self, base_reason):
+        """Get multiple reasons for higher impact"""
+        # Add base reason plus additional reasons
+        reasons = [base_reason]
+        
+        # Add 1-2 additional reasons for variety
+        additional_reasons = random.sample(self.reason_combinations[random.randint(0, len(self.reason_combinations)-1)], 1)
+        reasons.extend(additional_reasons)
+        
+        return reasons
+    
+    def get_custom_messages(self, reason_type):
+        """Get detailed custom messages for better impact"""
+        message_templates = {
+            "Spam": [
+                "This channel is aggressively spamming unwanted commercial content and violating community guidelines.",
+                "Mass distribution of unsolicited promotional material disrupting user experience.",
+                "Systematic spam campaign targeting multiple users with commercial content."
+            ],
+            "Violence": [
+                "Channel contains explicit violent content and threats that violate safety policies.",
+                "Promoting violence and dangerous activities that could harm users.",
+                "Distributing violent extremist content that violates community standards."
+            ],
+            "Pornography": [
+                "Explicit adult content being shared without proper age verification.",
+                "Inappropriate sexual content accessible to minors and general audience.",
+                "Adult material being distributed in violation of content policies."
+            ],
+            "Child Abuse": [
+                "Content that exploits or endangers minors in violation of child protection laws.",
+                "Inappropriate material involving minors that requires immediate attention.",
+                "Content that could harm children and violates child safety policies."
+            ],
+            "Fake Account": [
+                "Channel impersonating legitimate entities for deceptive purposes.",
+                "Fake account spreading misinformation and deceiving users.",
+                "Impersonation of official accounts to mislead the community."
+            ],
+            "Copyright": [
+                "Unauthorized distribution of copyrighted material without permission.",
+                "Systematic copyright infringement affecting content creators.",
+                "Sharing protected content in violation of intellectual property rights."
+            ],
+            "Illegal Drugs": [
+                "Promoting illegal drug sales and distribution activities.",
+                "Content facilitating illegal drug trade and substance abuse.",
+                "Channel involved in illegal drug trafficking and promotion."
+            ],
+            "Personal Details": [
+                "Sharing private personal information without consent.",
+                "Doxxing and privacy violations affecting user safety.",
+                "Unauthorized disclosure of personal data and private information."
+            ],
+            "Extremism": [
+                "Promoting extremist ideologies and terrorist activities.",
+                "Content supporting violent extremism and radicalization.",
+                "Channel spreading extremist propaganda and dangerous ideologies."
+            ],
+            "Scam/Fraud": [
+                "Running fraudulent schemes and financial scams.",
+                "Deceptive practices targeting users for financial gain.",
+                "Channel involved in systematic fraud and scam operations."
+            ],
+            "Other": [
+                "Multiple violations of Telegram's Terms of Service and community guidelines.",
+                "Channel engaging in various harmful activities requiring moderation.",
+                "Content that violates multiple community standards and policies."
+            ]
+        }
+        
+        templates = message_templates.get(reason_type, message_templates["Other"])
+        return random.choice(templates)
+
+# Advanced account management
+class AdvancedAccountManager:
+    """Advanced account management for maximum effectiveness"""
+    
+    def __init__(self):
+        self.account_pools = {
+            'fresh': [],      # New accounts (1-7 days old)
+            'established': [], # Established accounts (1-6 months)
+            'veteran': []     # Veteran accounts (6+ months)
+        }
+        self.account_rotation_strategy = 'smart'
+    
+    async def categorize_accounts(self, clients):
+        """Categorize accounts by age and activity"""
+        for client in clients:
+            try:
+                me = await client.get_me()
+                # This is a simplified categorization
+                # In practice, you'd check account creation date
+                category = random.choice(['fresh', 'established', 'veteran'])
+                self.account_pools[category].append(client)
+            except:
+                self.account_pools['fresh'].append(client)
+    
+    def get_optimal_account_sequence(self, total_reports_needed):
+        """Get optimal account sequence for maximum impact"""
+        sequence = []
+        
+        # Mix account types for natural-looking reporting
+        for i in range(total_reports_needed):
+            if i < total_reports_needed * 0.3:
+                # 30% fresh accounts
+                if self.account_pools['fresh']:
+                    sequence.append(self.account_pools['fresh'].pop(0))
+            elif i < total_reports_needed * 0.7:
+                # 40% established accounts
+                if self.account_pools['established']:
+                    sequence.append(self.account_pools['established'].pop(0))
+            else:
+                # 30% veteran accounts
+                if self.account_pools['veteran']:
+                    sequence.append(self.account_pools['veteran'].pop(0))
+        
+        # Fill remaining with available accounts
+        for pool in self.account_pools.values():
+            sequence.extend(pool)
+        
+        return sequence[:total_reports_needed]
+
+# Advanced proxy management
+class AdvancedProxyManager(EnhancedProxy):
+    """Enhanced proxy management with advanced features"""
+    
+    def __init__(self, proxy_list=None):
+        super().__init__(proxy_list)
+        self.proxy_rotation_strategy = 'geographic'
+        self.geographic_proxies = {
+            'europe': [],
+            'north_america': [],
+            'asia': [],
+            'other': []
+        }
+        self.categorize_proxies()
+    
+    def categorize_proxies(self):
+        """Categorize proxies by geographic location"""
+        # This is a simplified categorization
+        # In practice, you'd use IP geolocation services
+        for proxy in self.proxies:
+            category = random.choice(['europe', 'north_america', 'asia', 'other'])
+            self.geographic_proxies[category].append(proxy)
+    
+    def get_geographic_proxy_rotation(self):
+        """Get proxies with geographic rotation for natural appearance"""
+        rotation = []
+        
+        # Rotate through different geographic regions
+        for region in ['europe', 'north_america', 'asia', 'other']:
+            if self.geographic_proxies[region]:
+                rotation.extend(self.geographic_proxies[region])
+        
+        return rotation
+
+# Advanced reporting engine
+class AdvancedReportingEngine:
+    """Advanced reporting engine for maximum effectiveness"""
+    
+    def __init__(self, strategy, account_manager, proxy_manager):
+        self.strategy = strategy
+        self.account_manager = account_manager
+        self.proxy_manager = proxy_manager
+        self.report_history = []
+        self.success_patterns = []
+    
+    async def execute_advanced_reporting(self, target_channel, base_reason, total_reports=100):
+        """Execute advanced reporting strategy"""
+        
+        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🚀 ADVANCED REPORTING ENGINE ACTIVATED{' ' * 35}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═' * 73}╣")
+        
+        # Check optimal timing
+        is_peak, timing_info = self.strategy.get_optimal_timing()
+        if is_peak:
+            print(f"{Fore.CYAN}║ {Fore.GREEN}✓ {Fore.WHITE}{timing_info}{' ' * (60 - len(timing_info))}{Fore.CYAN}║")
+        else:
+            print(f"{Fore.CYAN}║ {Fore.YELLOW}⚠ {Fore.WHITE}{timing_info}{' ' * (60 - len(timing_info))}{Fore.CYAN}║")
+        
+        # Calculate optimal distribution
+        reports_per_account = min(5, total_reports // 20)  # Max 5 reports per account
+        accounts_needed = (total_reports + reports_per_account - 1) // reports_per_account
+        
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Target Reports: {Fore.GREEN}{total_reports}{' ' * (55 - len(str(total_reports)))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Accounts Needed: {Fore.GREEN}{accounts_needed}{' ' * (53 - len(str(accounts_needed)))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Reports per Account: {Fore.GREEN}{reports_per_account}{' ' * (48 - len(str(reports_per_account)))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╚{'═' * 73}╝")
+        
+        # Get account sequence
+        available_clients = self.account_manager.get_optimal_account_sequence(accounts_needed)
+        
+        if len(available_clients) < accounts_needed:
+            print(f"{Fore.RED}⚠ Warning: Only {len(available_clients)} accounts available, {accounts_needed} needed")
+            print(f"{Fore.YELLOW}Consider adding more accounts for maximum effectiveness")
+        
+        # Execute reporting with advanced strategies
+        success_count = 0
+        total_attempts = 0
+        
+        for i, client in enumerate(available_clients):
+            if total_attempts >= total_reports:
+                break
+                
+            # Get multiple reasons for this account
+            reasons = self.strategy.get_reason_combination(base_reason)
+            
+            # Get custom message
+            custom_message = self.strategy.get_custom_messages(stats.reason_type)
+            
+            # Execute reports for this account
+            account_success = 0
+            for j in range(reports_per_account):
+                if total_attempts >= total_reports:
+                    break
+                    
+                # Use different reason for each report
+                current_reason = reasons[j % len(reasons)]
+                
+                # Add variation to custom message
+                varied_message = f"{custom_message} Report #{j+1} from account {i+1}."
+                
+                # Execute report with retry logic
+                success = await self.execute_report_with_retry(
+                    client, target_channel, current_reason, varied_message
+                )
+                
+                if success:
+                    account_success += 1
+                    success_count += 1
+                
+                total_attempts += 1
+                
+                # Smart delay between reports
+                if j < reports_per_account - 1:
+                    delay = random.uniform(3, 8)
+                    await asyncio.sleep(delay)
+            
+            # Account summary
+            success_rate = (account_success / min(reports_per_account, total_reports - total_attempts + account_success)) * 100
+            print(f"{Fore.CYAN}Account {i+1}: {Fore.GREEN}{account_success}/{min(reports_per_account, total_reports - total_attempts + account_success)} reports ({success_rate:.1f}%)")
+            
+            # Session delay between accounts
+            if i < len(available_clients) - 1:
+                session_delay = random.uniform(30, 120)
+                print(f"{Fore.YELLOW}Switching accounts in {session_delay:.1f}s...")
+                await asyncio.sleep(session_delay)
+        
+        # Final results
+        overall_success_rate = (success_count / total_attempts) * 100 if total_attempts > 0 else 0
+        
+        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 ADVANCED REPORTING RESULTS{' ' * 47}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═' * 73}╣")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Total Reports Sent: {Fore.GREEN}{success_count}/{total_attempts}{' ' * (50 - len(f'{success_count}/{total_attempts}'))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Success Rate: {Fore.GREEN}{overall_success_rate:.1f}%{' ' * (58 - len(f'{overall_success_rate:.1f}%'))}{Fore.CYAN}║")
+        
+        # Effectiveness prediction
+        if overall_success_rate > 80 and success_count > 50:
+            prediction = "EXTREMELY HIGH - Channel likely to be restricted/banned"
+            prediction_color = Fore.GREEN
+        elif overall_success_rate > 60 and success_count > 30:
+            prediction = "HIGH - Strong chance of moderation action"
+            prediction_color = Fore.GREEN
+        elif overall_success_rate > 40 and success_count > 20:
+            prediction = "MEDIUM - Moderate chance of action"
+            prediction_color = Fore.YELLOW
+        else:
+            prediction = "LOW - May need additional reporting sessions"
+            prediction_color = Fore.RED
+        
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Effectiveness: {prediction_color}{prediction}{' ' * (50 - len(prediction))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╚{'═' * 73}╝")
+        
+        return success_count, total_attempts
+    
+    async def execute_report_with_retry(self, client, channel, reason, message, max_retries=3):
+        """Execute report with advanced retry logic"""
+        for attempt in range(max_retries):
+            try:
+                success = await report_channel(client, channel, reason, None, message)
+                if success:
+                    return True
+                
+                # Progressive backoff
+                if attempt < max_retries - 1:
+                    delay = (attempt + 1) * 5
+                    await asyncio.sleep(delay)
+                    
+            except Exception as e:
+                logger.warning(f"Report attempt {attempt + 1} failed: {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(10)
+        
+        return False
+
+async def handle_report_api_compatibility(client, peer, message_ids, reason_obj, extra_details=""):
+    """
+    Unified reporting handler for both messages and peers.
+    Ensures correct API call depending on whether message_ids are provided.
+    """
+    try:
+        if message_ids and len(message_ids) > 0:
+            result = await client(functions.messages.Report(
+                peer=peer,
+                id=message_ids,
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
+            ))
+        else:
+            result = await client(functions.account.ReportPeer(
+                peer=peer,
+                reason=reason_obj,
+                message=extra_details or "Reported via EnhancedMassReporter"
+            ))
+        return result
+    except Exception as e:
+        logger.error(f"❌ Report API call failed: {e}")
+        return False
+
+class PasswordProtection:
+    """Password protection system for enhanced security"""
+    
+    def __init__(self):
+        # Default password - CHANGE THIS TO YOUR OWN PASSWORD
+        self.admin_password = "ADMIN_2024_SECURE"  # Change this!
+        self.max_attempts = 3
+        self.lockout_duration = 300  # 5 minutes lockout
+        self.failed_attempts = 0
+        self.last_failed_time = 0
+        
+        # Try to load password from config file
+        self.load_password_from_config()
+    
+    def load_password_from_config(self):
+        """Load password from config file if it exists"""
+        try:
+            if os.path.exists('admin_config.json'):
+                with open('admin_config.json', 'r') as f:
+                    config = json.load(f)
+                    if 'admin_password' in config:
+                        self.admin_password = config['admin_password']
+                        logger.info("Admin password loaded from config file")
+        except Exception as e:
+            logger.warning(f"Could not load admin config: {e}")
+    
+    def save_password_to_config(self):
+        """Save password to config file"""
+        try:
+            config = {'admin_password': self.admin_password}
+            with open('admin_config.json', 'w') as f:
+                json.dump(config, f, indent=4)
+            logger.info("Admin password saved to config file")
+        except Exception as e:
+            logger.error(f"Could not save admin config: {e}")
+    
+    def change_password(self):
+        """Allow admin to change password"""
+        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔐 ADMIN PASSWORD MANAGEMENT{' ' * 45}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═' * 73}╣")
+        
+        current_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Enter current password: {Fore.CYAN}║\n{Fore.CYAN}║ {Fore.WHITE}Password: ")
+        
+        if current_password != self.admin_password:
+            print(f"{Fore.CYAN}║ {Fore.RED}❌ Incorrect current password!{Fore.CYAN}║")
+            print(f"{Fore.CYAN}╚{'═' * 73}╝")
+            return False
+        
+        new_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Enter new password: ")
+        confirm_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Confirm new password: ")
+        
+        if new_password != confirm_password:
+            print(f"{Fore.CYAN}║ {Fore.RED}❌ Passwords don't match!{Fore.CYAN}║")
+            print(f"{Fore.CYAN}╚{'═' * 73}╝")
+            return False
+        
+        if len(new_password) < 8:
+            print(f"{Fore.CYAN}║ {Fore.RED}❌ Password must be at least 8 characters!{Fore.CYAN}║")
+            print(f"{Fore.CYAN}╚{'═' * 73}╝")
+            return False
+        
+        self.admin_password = new_password
+        self.save_password_to_config()
+        
+        print(f"{Fore.CYAN}║ {Fore.GREEN}✅ Password changed successfully!{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╚{'═' * 73}╝")
+        return True
+    
+    def authenticate(self):
+        """Authenticate user with password"""
+        # Check if user is locked out
+        if self.failed_attempts >= self.max_attempts:
+            time_since_last = time.time() - self.last_failed_time
+            if time_since_last < self.lockout_duration:
+                remaining_time = int(self.lockout_duration - time_since_last)
+                print(f"\n{Fore.RED}╔{'═' * 73}╗")
+                print(f"{Fore.RED}║ {Fore.WHITE}🚫 ACCOUNT LOCKED - Too many failed attempts{' ' * 25}{Fore.RED}║")
+                print(f"{Fore.RED}╠{'═' * 73}╣")
+                print(f"{Fore.RED}║ {Fore.WHITE}Please wait {Fore.YELLOW}{remaining_time} seconds{Fore.WHITE} before trying again{' ' * 20}{Fore.RED}║")
+                print(f"{Fore.RED}╚{'═' * 73}╝")
+                return False
+            else:
+                # Reset failed attempts after lockout period
+                self.failed_attempts = 0
+        
+        # Display authentication screen
+        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔐 ENHANCED MASS REPORTER - ADMIN ACCESS{' ' * 35}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═' * 73}╣")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}This tool requires administrator authentication{' ' * 30}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Attempts remaining: {Fore.YELLOW}{self.max_attempts - self.failed_attempts}{Fore.WHITE}{' ' * (45 - len(str(self.max_attempts - self.failed_attempts)))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╚{'═' * 73}╝")
+        
+        # Get password input (hidden)
+        import getpass
+        password = getpass.getpass(f"{Fore.CYAN}▶ {Fore.WHITE}Enter admin password: ")
+        
+        if password == self.admin_password:
+            # Successful authentication
+            self.failed_attempts = 0
+            print(f"\n{Fore.GREEN}╔{'═' * 73}╗")
+            print(f"{Fore.GREEN}║ {Fore.WHITE}✅ ACCESS GRANTED - Welcome, Administrator!{' ' * 30}{Fore.GREEN}║")
+            print(f"{Fore.GREEN}╚{'═' * 73}╝")
+            
+            # Show admin options
+            self.show_admin_menu()
+            return True
+        else:
+            # Failed authentication
+            self.failed_attempts += 1
+            self.last_failed_time = time.time()
+            
+            remaining_attempts = self.max_attempts - self.failed_attempts
+            print(f"\n{Fore.RED}╔{'═' * 73}╗")
+            print(f"{Fore.RED}║ {Fore.WHITE}❌ ACCESS DENIED - Invalid password{' ' * 40}{Fore.RED}║")
+            print(f"{Fore.RED}╠{'═' * 73}╣")
+            print(f"{Fore.RED}║ {Fore.WHITE}Attempts remaining: {Fore.YELLOW}{remaining_attempts}{Fore.WHITE}{' ' * (45 - len(str(remaining_attempts)))}{Fore.RED}║")
+            
+            if remaining_attempts == 0:
+                print(f"{Fore.RED}║ {Fore.WHITE}Account will be locked for {Fore.YELLOW}5 minutes{Fore.WHITE}{' ' * 40}{Fore.RED}║")
+            
+            print(f"{Fore.RED}╚{'═' * 73}╝")
+            return False
+    
+    def show_admin_menu(self):
+        """Show admin menu options"""
+        while True:
+            print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+            print(f"{Fore.CYAN}║ {Fore.YELLOW}⚙️  ADMIN MENU{' ' * 60}{Fore.CYAN}║")
+            print(f"{Fore.CYAN}╠{'═' * 73}╣")
+            print(f"{Fore.CYAN}║ {Fore.WHITE}1. {Fore.GREEN}Change Admin Password{' ' * 50}{Fore.CYAN}║")
+            print(f"{Fore.CYAN}║ {Fore.WHITE}2. {Fore.GREEN}View System Status{' ' * 52}{Fore.CYAN}║")
+            print(f"{Fore.CYAN}║ {Fore.WHITE}3. {Fore.GREEN}Continue to Main Program{' ' * 48}{Fore.CYAN}║")
+            print(f"{Fore.CYAN}║ {Fore.WHITE}4. {Fore.RED}Exit{' ' * 65}{Fore.CYAN}║")
+            print(f"{Fore.CYAN}╚{'═' * 73}╝")
+            
+            choice = input(f"{Fore.CYAN}▶ {Fore.WHITE}Select option (1-4): ")
+            
+            if choice == '1':
+                self.change_password()
+            elif choice == '2':
+                self.show_system_status()
+            elif choice == '3':
+                print(f"\n{Fore.GREEN}✅ Proceeding to main program...")
+                break
+            elif choice == '4':
+                print(f"\n{Fore.YELLOW}Exiting program. Goodbye!")
+                sys.exit(0)
+            else:
+                print(f"{Fore.RED}Invalid choice. Please select 1-4.")
+    
+    def show_system_status(self):
+        """Show system status information"""
+        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 SYSTEM STATUS{' ' * 58}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═' * 73}╣")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Script Version: {Fore.GREEN}Enhanced MassReporter v2.0{' ' * 35}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Python Version: {Fore.GREEN}{sys.version.split()[0]}{' ' * (50 - len(sys.version.split()[0]))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Platform: {Fore.GREEN}{sys.platform}{' ' * (55 - len(sys.platform))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Current Time: {Fore.GREEN}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{' ' * (40 - len(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║ {Fore.WHITE}Admin Access: {Fore.GREEN}GRANTED{' ' * (55 - len('GRANTED'))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╚{'═' * 73}╝")
+
+# Initialize password protection
+password_protection = PasswordProtection()
+
 async def main():
     # Display animated banner
     print_animated_banner()
@@ -1238,6 +1808,11 @@ async def main():
     parser.add_argument("--no-auth", help="Skip authentication (for testing only)", action="store_true")
     
     args = parser.parse_args()
+    
+    # Check if authentication is required
+    if not args.no_auth:
+        if not password_protection.authenticate():
+            return
     
     # Interactive mode if args not provided
     session_dir = args.session_dir or input(f"Enter path to session files directory [sessions]: ").strip() or "sessions"
@@ -1813,579 +2388,6 @@ async def main():
         print(f"{Fore.GREEN}Done! Thank you for using Enhanced MassReporter.")
     
     return True  # Indicate successful completion
-
-def analyze_report_effectiveness():
-    """Analyze and provide insights on report effectiveness"""
-    print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-    print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 REPORT EFFECTIVENESS ANALYSIS{' ' * 45}{Fore.CYAN}║")
-    print(f"{Fore.CYAN}╠{'═' * 73}╣")
-    
-    effectiveness_tips = [
-        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.GREEN}High Success Rate Factors:{' ' * 50}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Use 50+ different accounts for maximum impact{' ' * 35}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Report during peak hours (when mods are active){' ' * 30}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Use multiple report reasons (not just spam){' ' * 32}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Include detailed custom messages{' ' * 45}{Fore.CYAN}║",
-        f"{Fore.CYAN}║{' ' * 73}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.YELLOW}Channel Ban Probability:{' ' * 50}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - 10-50 reports: 30% chance of restriction{' ' * 35}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - 50-100 reports: 60% chance of restriction{' ' * 35}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - 100+ reports: 80%+ chance of action{' ' * 40}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Severe violations: Higher ban probability{' ' * 35}{Fore.CYAN}║",
-        f"{Fore.CYAN}║{' ' * 73}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}• {Fore.RED}Important Notes:{' ' * 55}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Reports are reviewed by humans, not automated{' ' * 30}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - False reports can get your accounts banned{' ' * 32}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Use only against genuinely harmful content{' ' * 35}{Fore.CYAN}║",
-        f"{Fore.CYAN}║ {Fore.WHITE}  - Multiple sessions may be needed for large channels{' ' * 25}{Fore.CYAN}║"
-    ]
-    
-    for tip in effectiveness_tips:
-        print(tip)
-    
-    print(f"{Fore.CYAN}╚{'═' * 73}╝")
-
-# Add these advanced features after the existing imports
-
-# Advanced reporting strategies
-class AdvancedReportingStrategy:
-    """Advanced strategies for maximum report effectiveness"""
-    
-    def __init__(self):
-        self.report_patterns = {
-            'aggressive': {
-                'reports_per_account': 5,
-                'delay_range': (2, 8),
-                'session_delay': (30, 120),
-                'retry_attempts': 3
-            },
-            'stealth': {
-                'reports_per_account': 2,
-                'delay_range': (10, 30),
-                'session_delay': (60, 300),
-                'retry_attempts': 2
-            },
-            'mass': {
-                'reports_per_account': 10,
-                'delay_range': (1, 5),
-                'session_delay': (10, 60),
-                'retry_attempts': 5
-            }
-        }
-        
-        # Peak hours for maximum moderator activity
-        self.peak_hours = [
-            (9, 12),   # Morning (UTC)
-            (14, 17),  # Afternoon (UTC)
-            (19, 22)   # Evening (UTC)
-        ]
-        
-        # Multiple report reasons for higher impact
-        self.reason_combinations = [
-            [types.InputReportReasonSpam(), types.InputReportReasonViolence()],
-            [types.InputReportReasonPornography(), types.InputReportReasonChildAbuse()],
-            [types.InputReportReasonFake(), types.InputReportReasonCopyright()],
-            [types.InputReportReasonIllegalDrugs(), types.InputReportReasonOther()],
-            [types.InputReportReasonPersonalDetails(), types.InputReportReasonSpam()]
-        ]
-    
-    def get_optimal_timing(self):
-        """Get optimal timing for maximum moderator response"""
-        current_hour = datetime.utcnow().hour
-        
-        for start, end in self.peak_hours:
-            if start <= current_hour <= end:
-                return True, f"Peak hours detected ({start}:00-{end}:00 UTC)"
-        
-        return False, "Off-peak hours - consider waiting for peak times"
-    
-    def get_reason_combination(self, base_reason):
-        """Get multiple reasons for higher impact"""
-        # Add base reason plus additional reasons
-        reasons = [base_reason]
-        
-        # Add 1-2 additional reasons for variety
-        additional_reasons = random.sample(self.reason_combinations[random.randint(0, len(self.reason_combinations)-1)], 1)
-        reasons.extend(additional_reasons)
-        
-        return reasons
-    
-    def get_custom_messages(self, reason_type):
-        """Get detailed custom messages for better impact"""
-        message_templates = {
-            "Spam": [
-                "This channel is aggressively spamming unwanted commercial content and violating community guidelines.",
-                "Mass distribution of unsolicited promotional material disrupting user experience.",
-                "Systematic spam campaign targeting multiple users with commercial content."
-            ],
-            "Violence": [
-                "Channel contains explicit violent content and threats that violate safety policies.",
-                "Promoting violence and dangerous activities that could harm users.",
-                "Distributing violent extremist content that violates community standards."
-            ],
-            "Pornography": [
-                "Explicit adult content being shared without proper age verification.",
-                "Inappropriate sexual content accessible to minors and general audience.",
-                "Adult material being distributed in violation of content policies."
-            ],
-            "Child Abuse": [
-                "Content that exploits or endangers minors in violation of child protection laws.",
-                "Inappropriate material involving minors that requires immediate attention.",
-                "Content that could harm children and violates child safety policies."
-            ],
-            "Fake Account": [
-                "Channel impersonating legitimate entities for deceptive purposes.",
-                "Fake account spreading misinformation and deceiving users.",
-                "Impersonation of official accounts to mislead the community."
-            ],
-            "Copyright": [
-                "Unauthorized distribution of copyrighted material without permission.",
-                "Systematic copyright infringement affecting content creators.",
-                "Sharing protected content in violation of intellectual property rights."
-            ],
-            "Illegal Drugs": [
-                "Promoting illegal drug sales and distribution activities.",
-                "Content facilitating illegal drug trade and substance abuse.",
-                "Channel involved in illegal drug trafficking and promotion."
-            ],
-            "Personal Details": [
-                "Sharing private personal information without consent.",
-                "Doxxing and privacy violations affecting user safety.",
-                "Unauthorized disclosure of personal data and private information."
-            ],
-            "Extremism": [
-                "Promoting extremist ideologies and terrorist activities.",
-                "Content supporting violent extremism and radicalization.",
-                "Channel spreading extremist propaganda and dangerous ideologies."
-            ],
-            "Scam/Fraud": [
-                "Running fraudulent schemes and financial scams.",
-                "Deceptive practices targeting users for financial gain.",
-                "Channel involved in systematic fraud and scam operations."
-            ],
-            "Other": [
-                "Multiple violations of Telegram's Terms of Service and community guidelines.",
-                "Channel engaging in various harmful activities requiring moderation.",
-                "Content that violates multiple community standards and policies."
-            ]
-        }
-        
-        templates = message_templates.get(reason_type, message_templates["Other"])
-        return random.choice(templates)
-
-# Advanced account management
-class AdvancedAccountManager:
-    """Advanced account management for maximum effectiveness"""
-    
-    def __init__(self):
-        self.account_pools = {
-            'fresh': [],      # New accounts (1-7 days old)
-            'established': [], # Established accounts (1-6 months)
-            'veteran': []     # Veteran accounts (6+ months)
-        }
-        self.account_rotation_strategy = 'smart'
-    
-    async def categorize_accounts(self, clients):
-        """Categorize accounts by age and activity"""
-        for client in clients:
-            try:
-                me = await client.get_me()
-                # This is a simplified categorization
-                # In practice, you'd check account creation date
-                category = random.choice(['fresh', 'established', 'veteran'])
-                self.account_pools[category].append(client)
-            except:
-                self.account_pools['fresh'].append(client)
-    
-    def get_optimal_account_sequence(self, total_reports_needed):
-        """Get optimal account sequence for maximum impact"""
-        sequence = []
-        
-        # Mix account types for natural-looking reporting
-        for i in range(total_reports_needed):
-            if i < total_reports_needed * 0.3:
-                # 30% fresh accounts
-                if self.account_pools['fresh']:
-                    sequence.append(self.account_pools['fresh'].pop(0))
-            elif i < total_reports_needed * 0.7:
-                # 40% established accounts
-                if self.account_pools['established']:
-                    sequence.append(self.account_pools['established'].pop(0))
-            else:
-                # 30% veteran accounts
-                if self.account_pools['veteran']:
-                    sequence.append(self.account_pools['veteran'].pop(0))
-        
-        # Fill remaining with available accounts
-        for pool in self.account_pools.values():
-            sequence.extend(pool)
-        
-        return sequence[:total_reports_needed]
-
-# Advanced proxy management
-class AdvancedProxyManager(EnhancedProxy):
-    """Enhanced proxy management with advanced features"""
-    
-    def __init__(self, proxy_list=None):
-        super().__init__(proxy_list)
-        self.proxy_rotation_strategy = 'geographic'
-        self.geographic_proxies = {
-            'europe': [],
-            'north_america': [],
-            'asia': [],
-            'other': []
-        }
-        self.categorize_proxies()
-    
-    def categorize_proxies(self):
-        """Categorize proxies by geographic location"""
-        # This is a simplified categorization
-        # In practice, you'd use IP geolocation services
-        for proxy in self.proxies:
-            category = random.choice(['europe', 'north_america', 'asia', 'other'])
-            self.geographic_proxies[category].append(proxy)
-    
-    def get_geographic_proxy_rotation(self):
-        """Get proxies with geographic rotation for natural appearance"""
-        rotation = []
-        
-        # Rotate through different geographic regions
-        for region in ['europe', 'north_america', 'asia', 'other']:
-            if self.geographic_proxies[region]:
-                rotation.extend(self.geographic_proxies[region])
-        
-        return rotation
-
-# Advanced reporting engine
-class AdvancedReportingEngine:
-    """Advanced reporting engine for maximum effectiveness"""
-    
-    def __init__(self, strategy, account_manager, proxy_manager):
-        self.strategy = strategy
-        self.account_manager = account_manager
-        self.proxy_manager = proxy_manager
-        self.report_history = []
-        self.success_patterns = []
-    
-    async def execute_advanced_reporting(self, target_channel, base_reason, total_reports=100):
-        """Execute advanced reporting strategy"""
-        
-        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-        print(f"{Fore.CYAN}║ {Fore.YELLOW}🚀 ADVANCED REPORTING ENGINE ACTIVATED{' ' * 35}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╠{'═' * 73}╣")
-        
-        # Check optimal timing
-        is_peak, timing_info = self.strategy.get_optimal_timing()
-        if is_peak:
-            print(f"{Fore.CYAN}║ {Fore.GREEN}✓ {Fore.WHITE}{timing_info}{' ' * (60 - len(timing_info))}{Fore.CYAN}║")
-        else:
-            print(f"{Fore.CYAN}║ {Fore.YELLOW}⚠ {Fore.WHITE}{timing_info}{' ' * (60 - len(timing_info))}{Fore.CYAN}║")
-        
-        # Calculate optimal distribution
-        reports_per_account = min(5, total_reports // 20)  # Max 5 reports per account
-        accounts_needed = (total_reports + reports_per_account - 1) // reports_per_account
-        
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Target Reports: {Fore.GREEN}{total_reports}{' ' * (55 - len(str(total_reports)))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Accounts Needed: {Fore.GREEN}{accounts_needed}{' ' * (53 - len(str(accounts_needed)))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Reports per Account: {Fore.GREEN}{reports_per_account}{' ' * (48 - len(str(reports_per_account)))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╚{'═' * 73}╝")
-        
-        # Get account sequence
-        available_clients = self.account_manager.get_optimal_account_sequence(accounts_needed)
-        
-        if len(available_clients) < accounts_needed:
-            print(f"{Fore.RED}⚠ Warning: Only {len(available_clients)} accounts available, {accounts_needed} needed")
-            print(f"{Fore.YELLOW}Consider adding more accounts for maximum effectiveness")
-        
-        # Execute reporting with advanced strategies
-        success_count = 0
-        total_attempts = 0
-        
-        for i, client in enumerate(available_clients):
-            if total_attempts >= total_reports:
-                break
-                
-            # Get multiple reasons for this account
-            reasons = self.strategy.get_reason_combination(base_reason)
-            
-            # Get custom message
-            custom_message = self.strategy.get_custom_messages(stats.reason_type)
-            
-            # Execute reports for this account
-            account_success = 0
-            for j in range(reports_per_account):
-                if total_attempts >= total_reports:
-                    break
-                    
-                # Use different reason for each report
-                current_reason = reasons[j % len(reasons)]
-                
-                # Add variation to custom message
-                varied_message = f"{custom_message} Report #{j+1} from account {i+1}."
-                
-                # Execute report with retry logic
-                success = await self.execute_report_with_retry(
-                    client, target_channel, current_reason, varied_message
-                )
-                
-                if success:
-                    account_success += 1
-                    success_count += 1
-                
-                total_attempts += 1
-                
-                # Smart delay between reports
-                if j < reports_per_account - 1:
-                    delay = random.uniform(3, 8)
-                    await asyncio.sleep(delay)
-            
-            # Account summary
-            success_rate = (account_success / min(reports_per_account, total_reports - total_attempts + account_success)) * 100
-            print(f"{Fore.CYAN}Account {i+1}: {Fore.GREEN}{account_success}/{min(reports_per_account, total_reports - total_attempts + account_success)} reports ({success_rate:.1f}%)")
-            
-            # Session delay between accounts
-            if i < len(available_clients) - 1:
-                session_delay = random.uniform(30, 120)
-                print(f"{Fore.YELLOW}Switching accounts in {session_delay:.1f}s...")
-                await asyncio.sleep(session_delay)
-        
-        # Final results
-        overall_success_rate = (success_count / total_attempts) * 100 if total_attempts > 0 else 0
-        
-        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-        print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 ADVANCED REPORTING RESULTS{' ' * 47}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╠{'═' * 73}╣")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Total Reports Sent: {Fore.GREEN}{success_count}/{total_attempts}{' ' * (50 - len(f'{success_count}/{total_attempts}'))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Success Rate: {Fore.GREEN}{overall_success_rate:.1f}%{' ' * (58 - len(f'{overall_success_rate:.1f}%'))}{Fore.CYAN}║")
-        
-        # Effectiveness prediction
-        if overall_success_rate > 80 and success_count > 50:
-            prediction = "EXTREMELY HIGH - Channel likely to be restricted/banned"
-            prediction_color = Fore.GREEN
-        elif overall_success_rate > 60 and success_count > 30:
-            prediction = "HIGH - Strong chance of moderation action"
-            prediction_color = Fore.GREEN
-        elif overall_success_rate > 40 and success_count > 20:
-            prediction = "MEDIUM - Moderate chance of action"
-            prediction_color = Fore.YELLOW
-        else:
-            prediction = "LOW - May need additional reporting sessions"
-            prediction_color = Fore.RED
-        
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Effectiveness: {prediction_color}{prediction}{' ' * (50 - len(prediction))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╚{'═' * 73}╝")
-        
-        return success_count, total_attempts
-    
-    async def execute_report_with_retry(self, client, channel, reason, message, max_retries=3):
-        """Execute report with advanced retry logic"""
-        for attempt in range(max_retries):
-            try:
-                success = await report_channel(client, channel, reason, None, message)
-                if success:
-                    return True
-                
-                # Progressive backoff
-                if attempt < max_retries - 1:
-                    delay = (attempt + 1) * 5
-                    await asyncio.sleep(delay)
-                    
-            except Exception as e:
-                logger.warning(f"Report attempt {attempt + 1} failed: {str(e)}")
-                if attempt < max_retries - 1:
-                    await asyncio.sleep(10)
-        
-        return False
-
-# Add this function after the existing functions
-
-async def handle_report_api_compatibility(client, peer, message_ids, reason_obj, extra_details=""):
-    """
-    Unified reporting handler for both messages and peers.
-    Ensures correct API call depending on whether message_ids are provided.
-    """
-    try:
-        if message_ids and len(message_ids) > 0:
-            result = await client(functions.messages.Report(
-                peer=peer,
-                id=message_ids,
-                reason=reason_obj,
-                message=extra_details or "Reported via EnhancedMassReporter"
-            ))
-        else:
-            result = await client(functions.account.ReportPeer(
-                peer=peer,
-                reason=reason_obj,
-                message=extra_details or "Reported via EnhancedMassReporter"
-            ))
-        return result
-    except Exception as e:
-        logger.error(f"❌ Report API call failed: {e}")
-        return False
-
-    def __init__(self):
-        # Default password - CHANGE THIS TO YOUR OWN PASSWORD
-        self.admin_password = "ADMIN_2024_SECURE"  # Change this!
-        self.max_attempts = 3
-        self.lockout_duration = 300  # 5 minutes lockout
-        self.failed_attempts = 0
-        self.last_failed_time = 0
-        
-        # Try to load password from config file
-        self.load_password_from_config()
-    
-    def load_password_from_config(self):
-        """Load password from config file if it exists"""
-        try:
-            if os.path.exists('admin_config.json'):
-                with open('admin_config.json', 'r') as f:
-                    config = json.load(f)
-                    if 'admin_password' in config:
-                        self.admin_password = config['admin_password']
-                        logger.info("Admin password loaded from config file")
-        except Exception as e:
-            logger.warning(f"Could not load admin config: {e}")
-    
-    def save_password_to_config(self):
-        """Save password to config file"""
-        try:
-            config = {'admin_password': self.admin_password}
-            with open('admin_config.json', 'w') as f:
-                json.dump(config, f, indent=4)
-            logger.info("Admin password saved to config file")
-        except Exception as e:
-            logger.error(f"Could not save admin config: {e}")
-    
-    def change_password(self):
-        """Allow admin to change password"""
-        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔐 ADMIN PASSWORD MANAGEMENT{' ' * 45}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╠{'═' * 73}╣")
-        
-        current_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Enter current password: {Fore.CYAN}║\n{Fore.CYAN}║ {Fore.WHITE}Password: ")
-        
-        if current_password != self.admin_password:
-            print(f"{Fore.CYAN}║ {Fore.RED}❌ Incorrect current password!{Fore.CYAN}║")
-            print(f"{Fore.CYAN}╚{'═' * 73}╝")
-            return False
-        
-        new_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Enter new password: ")
-        confirm_password = input(f"{Fore.CYAN}║ {Fore.WHITE}Confirm new password: ")
-        
-        if new_password != confirm_password:
-            print(f"{Fore.CYAN}║ {Fore.RED}❌ Passwords don't match!{Fore.CYAN}║")
-            print(f"{Fore.CYAN}╚{'═' * 73}╝")
-            return False
-        
-        if len(new_password) < 8:
-            print(f"{Fore.CYAN}║ {Fore.RED}❌ Password must be at least 8 characters!{Fore.CYAN}║")
-            print(f"{Fore.CYAN}╚{'═' * 73}╝")
-            return False
-        
-        self.admin_password = new_password
-        self.save_password_to_config()
-        
-        print(f"{Fore.CYAN}║ {Fore.GREEN}✅ Password changed successfully!{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╚{'═' * 73}╝")
-        return True
-    
-    def authenticate(self):
-        """Authenticate user with password"""
-        # Check if user is locked out
-        if self.failed_attempts >= self.max_attempts:
-            time_since_last = time.time() - self.last_failed_time
-            if time_since_last < self.lockout_duration:
-                remaining_time = int(self.lockout_duration - time_since_last)
-                print(f"\n{Fore.RED}╔{'═' * 73}╗")
-                print(f"{Fore.RED}║ {Fore.WHITE}🚫 ACCOUNT LOCKED - Too many failed attempts{' ' * 25}{Fore.RED}║")
-                print(f"{Fore.RED}╠{'═' * 73}╣")
-                print(f"{Fore.RED}║ {Fore.WHITE}Please wait {Fore.YELLOW}{remaining_time} seconds{Fore.WHITE} before trying again{' ' * 20}{Fore.RED}║")
-                print(f"{Fore.RED}╚{'═' * 73}╝")
-                return False
-            else:
-                # Reset failed attempts after lockout period
-                self.failed_attempts = 0
-        
-        # Display authentication screen
-        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔐 ENHANCED MASS REPORTER - ADMIN ACCESS{' ' * 35}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╠{'═' * 73}╣")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}This tool requires administrator authentication{' ' * 30}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Attempts remaining: {Fore.YELLOW}{self.max_attempts - self.failed_attempts}{Fore.WHITE}{' ' * (45 - len(str(self.max_attempts - self.failed_attempts)))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╚{'═' * 73}╝")
-        
-        # Get password input (hidden)
-        import getpass
-        password = getpass.getpass(f"{Fore.CYAN}▶ {Fore.WHITE}Enter admin password: ")
-        
-        if password == self.admin_password:
-            # Successful authentication
-            self.failed_attempts = 0
-            print(f"\n{Fore.GREEN}╔{'═' * 73}╗")
-            print(f"{Fore.GREEN}║ {Fore.WHITE}✅ ACCESS GRANTED - Welcome, Administrator!{' ' * 30}{Fore.GREEN}║")
-            print(f"{Fore.GREEN}╚{'═' * 73}╝")
-            
-            # Show admin options
-            self.show_admin_menu()
-            return True
-        else:
-            # Failed authentication
-            self.failed_attempts += 1
-            self.last_failed_time = time.time()
-            
-            remaining_attempts = self.max_attempts - self.failed_attempts
-            print(f"\n{Fore.RED}╔{'═' * 73}╗")
-            print(f"{Fore.RED}║ {Fore.WHITE}❌ ACCESS DENIED - Invalid password{' ' * 40}{Fore.RED}║")
-            print(f"{Fore.RED}╠{'═' * 73}╣")
-            print(f"{Fore.RED}║ {Fore.WHITE}Attempts remaining: {Fore.YELLOW}{remaining_attempts}{Fore.WHITE}{' ' * (45 - len(str(remaining_attempts)))}{Fore.RED}║")
-            
-            if remaining_attempts == 0:
-                print(f"{Fore.RED}║ {Fore.WHITE}Account will be locked for {Fore.YELLOW}5 minutes{Fore.WHITE}{' ' * 40}{Fore.RED}║")
-            
-            print(f"{Fore.RED}╚{'═' * 73}╝")
-            return False
-    
-    def show_admin_menu(self):
-        """Show admin menu options"""
-        while True:
-            print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-            print(f"{Fore.CYAN}║ {Fore.YELLOW}⚙️  ADMIN MENU{' ' * 60}{Fore.CYAN}║")
-            print(f"{Fore.CYAN}╠{'═' * 73}╣")
-            print(f"{Fore.CYAN}║ {Fore.WHITE}1. {Fore.GREEN}Change Admin Password{' ' * 50}{Fore.CYAN}║")
-            print(f"{Fore.CYAN}║ {Fore.WHITE}2. {Fore.GREEN}View System Status{' ' * 52}{Fore.CYAN}║")
-            print(f"{Fore.CYAN}║ {Fore.WHITE}3. {Fore.GREEN}Continue to Main Program{' ' * 48}{Fore.CYAN}║")
-            print(f"{Fore.CYAN}║ {Fore.WHITE}4. {Fore.RED}Exit{' ' * 65}{Fore.CYAN}║")
-            print(f"{Fore.CYAN}╚{'═' * 73}╝")
-            
-            choice = input(f"{Fore.CYAN}▶ {Fore.WHITE}Select option (1-4): ")
-            
-            if choice == '1':
-                self.change_password()
-            elif choice == '2':
-                self.show_system_status()
-            elif choice == '3':
-                print(f"\n{Fore.GREEN}✅ Proceeding to main program...")
-                break
-            elif choice == '4':
-                print(f"\n{Fore.YELLOW}Exiting program. Goodbye!")
-                sys.exit(0)
-            else:
-                print(f"{Fore.RED}Invalid choice. Please select 1-4.")
-    
-    def show_system_status(self):
-        """Show system status information"""
-        print(f"\n{Fore.CYAN}╔{'═' * 73}╗")
-        print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 SYSTEM STATUS{' ' * 58}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╠{'═' * 73}╣")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Script Version: {Fore.GREEN}Enhanced MassReporter v2.0{' ' * 35}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Python Version: {Fore.GREEN}{sys.version.split()[0]}{' ' * (50 - len(sys.version.split()[0]))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Platform: {Fore.GREEN}{sys.platform}{' ' * (55 - len(sys.platform))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Current Time: {Fore.GREEN}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{' ' * (40 - len(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}║ {Fore.WHITE}Admin Access: {Fore.GREEN}GRANTED{' ' * (55 - len('GRANTED'))}{Fore.CYAN}║")
-        print(f"{Fore.CYAN}╚{'═' * 73}╝")
-
-# Initialize password protection
-password_protection = PasswordProtection()
 
 if __name__ == "__main__":
     # Register the signal handler for graceful exit

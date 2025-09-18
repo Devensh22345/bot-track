@@ -35,7 +35,18 @@ async def start_handler(client, message):
     today = datetime.utcnow().strftime("%Y-%m-%d")
     month = datetime.utcnow().strftime("%Y-%m")
 
-    # Save user info (upsert, so repeated start won't duplicate)
+    # Check if user already started to avoid multiple counting
+    existing_user = users_col.find_one({"user_id": user.id, "bot_id": BOT_ID})
+    if not existing_user:
+        # Update stats only if first start today
+        field = "premium_count" if is_premium else "nonpremium_count"
+        stats_col.update_one(
+            {"bot_id": BOT_ID, "date": today},
+            {"$inc": {field: 1}, "$set": {"month": month}},
+            upsert=True
+        )
+
+    # Save/update user info
     users_col.update_one(
         {"user_id": user.id, "bot_id": BOT_ID},
         {"$set": {
@@ -44,14 +55,6 @@ async def start_handler(client, message):
             "start_date": today,
             "bot_id": BOT_ID
         }},
-        upsert=True
-    )
-
-    # Update stats (daily)
-    stats_col.update_one(
-        {"bot_id": BOT_ID, "date": today},
-        {"$inc": {"premium_count" if is_premium else "nonpremium_count": 1},
-         "$set": {"month": month}},
         upsert=True
     )
 
@@ -110,7 +113,7 @@ async def report_handler(client, message):
         f"👤 Free: {daily.get('nonpremium_count', 0)}"
     )
 
-    # Monthly report
+    # Monthly report with date breakdown
     monthly_stats = list(stats_col.find({"bot_id": BOT_ID, "month": month}))
     monthly_lines = [f"📅 Monthly Report ({month})\n"]
     total_premium = 0
